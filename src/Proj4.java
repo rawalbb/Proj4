@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Proj4 {
     public static void main(String[] args) throws IOException {
@@ -162,6 +163,7 @@ public class Proj4 {
 
     public static double normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
         Iterator it = o.entrySet().iterator();
+        ArrayList<Double> allNets = new ArrayList<>();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
             ArrayList<Double> a = (ArrayList<Double>) pair.getValue();
@@ -173,7 +175,6 @@ public class Proj4 {
             HashMap<String, Double> aa = (HashMap<String, Double>) pair.getKey();
             Iterator throughKeyset= aa.keySet().iterator();
             int count = 0;
-            ArrayList<Double> allNets = new ArrayList<>();
             double net = 0;
             while(throughKeyset.hasNext()) {
                 double normalizedWeight = Math.sqrt(a.get(count) / sum);
@@ -181,17 +182,14 @@ public class Proj4 {
                 System.out.print("net: " + net + "normalized weight: " + normalizedWeight + "freq: " + aa.get(keyword));
                 net += normalizedWeight * aa.get(keyword);
                 System.out.println(" new net: " + net);
-
                 normalWeights.add(Math.sqrt(a.get(count) / sum));
+
                 count++;
             }
             allNets.add(net);
-            System.out.println("\n\nOVERALL NET FOR SENTENCE" + allNets + "\n\n");
-//            for (int x = 0; x < a.size(); x++) {
-//                double normalizedWeight = Math.sqrt(a.get(0) / sum);
-//                net += normalizedWeight
-//                normalWeights.add(Math.sqrt(a.get(0) / sum));
-//            }
+
+            System.out.println("\n\nOVERALL NET FOR SENTENCE" + net + "\n\n");
+
             o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
             System.out.println("IN NORMALIZED WEIGHTS METHOD");
             System.out.println("AFTER" + normalWeights);
@@ -200,10 +198,12 @@ public class Proj4 {
             System.out.println();
             System.out.println("ACTUAL "+ o);
         }
+        double maxNet = allNets.stream().mapToDouble(d -> d).max().orElseThrow(NoSuchElementException::new);
+        allNets.indexOf(maxNet);
+        System.out.println("max net "+ maxNet);
+        System.out.println("max index " + allNets.indexOf(maxNet));
 
-        System.out.println("ACTUAL "+ o);
-        return 0;
 
-
+        return maxNet;
     }
 }
