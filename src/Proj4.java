@@ -161,21 +161,37 @@ public class Proj4 {
     }
 
     public static double normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
-
         Iterator it = o.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            System.out.println(pair.getKey() + "  " + pair.getValue() + "\n");
             ArrayList<Double> a = (ArrayList<Double>) pair.getValue();
             int sum = 0;
             for (int x = 0; x < a.size(); x++) {
                 sum += Math.pow(a.get(x), 2);
             }
             ArrayList<Double> normalWeights = new ArrayList<>();
-            for (int x = 0; x < a.size(); x++) {
+            HashMap<String, Double> aa = (HashMap<String, Double>) pair.getKey();
+            Iterator throughKeyset= aa.keySet().iterator();
+            int count = 0;
+            ArrayList<Double> allNets = new ArrayList<>();
+            double net = 0;
+            while(throughKeyset.hasNext()) {
+                double normalizedWeight = Math.sqrt(a.get(count) / sum);
+                String keyword = throughKeyset.next().toString();
+                System.out.print("net: " + net + "normalized weight: " + normalizedWeight + "freq: " + aa.get(keyword));
+                net += normalizedWeight * aa.get(keyword);
+                System.out.println(" new net: " + net);
 
-                normalWeights.add(Math.sqrt(a.get(0) / sum));
+                normalWeights.add(Math.sqrt(a.get(count) / sum));
+                count++;
             }
+            allNets.add(net);
+            System.out.println("\n\nOVERALL NET FOR SENTENCE" + allNets + "\n\n");
+//            for (int x = 0; x < a.size(); x++) {
+//                double normalizedWeight = Math.sqrt(a.get(0) / sum);
+//                net += normalizedWeight
+//                normalWeights.add(Math.sqrt(a.get(0) / sum));
+//            }
             o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
             System.out.println("IN NORMALIZED WEIGHTS METHOD");
             System.out.println("AFTER" + normalWeights);
