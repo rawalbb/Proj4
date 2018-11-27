@@ -156,16 +156,17 @@ public class Proj4 {
         }
         System.out.println();
         //System.out.println("IN OBJECT WEIGHTS")
-        System.out.println(objectWeights);
+        //System.out.println(objectWeights);
         return objectWeights;
     }
 
     public static double normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
 
         Iterator it = o.entrySet().iterator();
+        ArrayList<Double> netVal = new ArrayList<>();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            System.out.println(pair.getKey() + "  " + pair.getValue() + "\n");
+           // System.out.println(pair.getKey() + "  " + pair.getValue() + "\n");
             ArrayList<Double> a = (ArrayList<Double>) pair.getValue();
             int sum = 0;
             for (int x = 0; x < a.size(); x++) {
@@ -177,15 +178,37 @@ public class Proj4 {
                 normalWeights.add(Math.sqrt(a.get(0) / sum));
             }
             o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
-            System.out.println("IN NORMALIZED WEIGHTS METHOD");
-            System.out.println("AFTER" + normalWeights);
-            System.out.println();
-            System.out.println("BEFORE" + a);
-            System.out.println();
-            System.out.println("ACTUAL "+ o);
+            System.out.println(pair.getKey() + "\n" + normalWeights);
+
+            //System.out.println("---------------------------------------");
+           // System.out.println(((HashMap<String, Double>) pair.getKey()).keySet());
+
+            Iterator words = ((HashMap<String, Double>) pair.getKey()).entrySet().iterator();
+            int count = 0;
+            double sum2 = 0;
+            while (words.hasNext()) {
+                Map.Entry pair2 = (Map.Entry) it.next();
+                System.out.println("OOOOOOOOOOOOOOOOO");
+                System.out.println(pair2);
+//                System.out.println("SIZE "+((ArrayList<Double>)pair2.getValue()));
+//                System.out.println("SIZe WEIGHTS "+normalWeights.size());
+                //for (int i = 0; i<((ArrayList<Double>)pair2.getValue()).size(); i++)
+                //sum2 += ((ArrayList<Double>)pair2.getValue()).get(count) * (normalWeights.get(count));
+                count++;
+            }
+            netVal.add(sum2);
+
+
+//            System.out.println("IN NORMALIZED WEIGHTS METHOD");
+//            System.out.println("AFTER" + normalWeights);
+//            System.out.println();
+//            System.out.println("BEFORE" + a);
+//            System.out.println();
+//            System.out.println("ACTUAL "+ o);
         }
 
-        System.out.println("ACTUAL "+ o);
+        //System.out.println("ACTUAL "+ o);
+        System.out.println("NETVAL " + netVal);
         return 0;
 
 
