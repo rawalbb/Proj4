@@ -195,11 +195,35 @@ public class Proj4 {
         }
 
         double maxNet = allNets.stream().mapToDouble(d -> d).max().orElseThrow(NoSuchElementException::new);
-        allNets.indexOf(maxNet);
+        double maxIndex = allNets.indexOf(maxNet);
         System.out.println("max net "+ maxNet);
-        System.out.println("max index " + allNets.indexOf(maxNet));
+        System.out.println("max index " + maxIndex);
 
-
+        Iterator vals= o.keySet().iterator();
+        HashMap<String, Double> hashSentence;
+        int hashMapCount = 0;
+        while(vals.hasNext()) {
+            if(maxIndex == 0 || (maxIndex > 0 && maxIndex == hashMapCount) ) {
+                hashSentence = (HashMap<String, Double>) vals.next();
+                Iterator abc = hashSentence.values().iterator();
+                int abcCount = 0;
+                ArrayList<Double> changeWeights= new ArrayList<>();
+                while(abc.hasNext())
+                {
+//                    System.out.println("\n\n"+o.get(hashSentence));
+                    double x = o.get(hashSentence).get(abcCount);
+                    double delta =  x + (double) abc.next()*.03;
+                    //System.out.println("COUNT " + abcCount);
+                    //System.out.println("Weights Before " + o.get(hashSentence).get(abcCount) + "    Const " + ((double)abc.next()*.03));
+                    changeWeights.add(delta);
+                    ++abcCount;
+                }
+                o.put(hashSentence, changeWeights);
+                //System.out.println("NEW WEIGHTS" + hashSentence + "\n" + changeWeights);
+            }
+            hashMapCount++;
+        }
+        //hashmap.getindex(maxIndex) = hashmap.get(maxIndex) + .3(hashmap.getindex(maxIndex).getval
         return maxNet;
     }
 }
