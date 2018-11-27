@@ -157,7 +157,7 @@ public class Proj4 {
         }
         System.out.println();
         //System.out.println("IN OBJECT WEIGHTS")
-        System.out.println(objectWeights);
+        //System.out.println(objectWeights);
         return objectWeights;
     }
 
@@ -191,13 +191,9 @@ public class Proj4 {
             System.out.println("\n\nOVERALL NET FOR SENTENCE" + net + "\n\n");
 
             o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
-            System.out.println("IN NORMALIZED WEIGHTS METHOD");
-            System.out.println("AFTER" + normalWeights);
-            System.out.println();
-            System.out.println("BEFORE" + a);
-            System.out.println();
-            System.out.println("ACTUAL "+ o);
+            System.out.println(pair.getKey() + "\n" + normalWeights);
         }
+
         double maxNet = allNets.stream().mapToDouble(d -> d).max().orElseThrow(NoSuchElementException::new);
         allNets.indexOf(maxNet);
         System.out.println("max net "+ maxNet);
