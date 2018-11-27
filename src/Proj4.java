@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Proj4 {
     public static void main(String[] args) throws IOException {
@@ -156,61 +157,53 @@ public class Proj4 {
         }
         System.out.println();
         //System.out.println("IN OBJECT WEIGHTS")
-        //System.out.println(objectWeights);
+        System.out.println(objectWeights);
         return objectWeights;
     }
 
     public static double normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
-
         Iterator it = o.entrySet().iterator();
-        ArrayList<Double> netVal = new ArrayList<>();
+        ArrayList<Double> allNets = new ArrayList<>();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-           // System.out.println(pair.getKey() + "  " + pair.getValue() + "\n");
             ArrayList<Double> a = (ArrayList<Double>) pair.getValue();
             int sum = 0;
             for (int x = 0; x < a.size(); x++) {
                 sum += Math.pow(a.get(x), 2);
             }
             ArrayList<Double> normalWeights = new ArrayList<>();
-            for (int x = 0; x < a.size(); x++) {
-
-                normalWeights.add(Math.sqrt(a.get(0) / sum));
-            }
-            o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
-            System.out.println(pair.getKey() + "\n" + normalWeights);
-
-            //System.out.println("---------------------------------------");
-           // System.out.println(((HashMap<String, Double>) pair.getKey()).keySet());
-
-            Iterator words = ((HashMap<String, Double>) pair.getKey()).entrySet().iterator();
+            HashMap<String, Double> aa = (HashMap<String, Double>) pair.getKey();
+            Iterator throughKeyset= aa.keySet().iterator();
             int count = 0;
-            double sum2 = 0;
-            while (words.hasNext()) {
-                Map.Entry pair2 = (Map.Entry) it.next();
-                System.out.println("OOOOOOOOOOOOOOOOO");
-                System.out.println(pair2);
-//                System.out.println("SIZE "+((ArrayList<Double>)pair2.getValue()));
-//                System.out.println("SIZe WEIGHTS "+normalWeights.size());
-                //for (int i = 0; i<((ArrayList<Double>)pair2.getValue()).size(); i++)
-                //sum2 += ((ArrayList<Double>)pair2.getValue()).get(count) * (normalWeights.get(count));
+            double net = 0;
+            while(throughKeyset.hasNext()) {
+                double normalizedWeight = Math.sqrt(a.get(count) / sum);
+                String keyword = throughKeyset.next().toString();
+                System.out.print("net: " + net + "normalized weight: " + normalizedWeight + "freq: " + aa.get(keyword));
+                net += normalizedWeight * aa.get(keyword);
+                System.out.println(" new net: " + net);
+                normalWeights.add(Math.sqrt(a.get(count) / sum));
+
                 count++;
             }
-            netVal.add(sum2);
+            allNets.add(net);
 
+            System.out.println("\n\nOVERALL NET FOR SENTENCE" + net + "\n\n");
 
-//            System.out.println("IN NORMALIZED WEIGHTS METHOD");
-//            System.out.println("AFTER" + normalWeights);
-//            System.out.println();
-//            System.out.println("BEFORE" + a);
-//            System.out.println();
-//            System.out.println("ACTUAL "+ o);
+            o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
+            System.out.println("IN NORMALIZED WEIGHTS METHOD");
+            System.out.println("AFTER" + normalWeights);
+            System.out.println();
+            System.out.println("BEFORE" + a);
+            System.out.println();
+            System.out.println("ACTUAL "+ o);
         }
+        double maxNet = allNets.stream().mapToDouble(d -> d).max().orElseThrow(NoSuchElementException::new);
+        allNets.indexOf(maxNet);
+        System.out.println("max net "+ maxNet);
+        System.out.println("max index " + allNets.indexOf(maxNet));
 
-        //System.out.println("ACTUAL "+ o);
-        System.out.println("NETVAL " + netVal);
-        return 0;
 
-
+        return maxNet;
     }
 }
