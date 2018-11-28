@@ -116,9 +116,6 @@ public class Proj4 {
         }
         csvWriter.close();
 
-        System.out.println("HASHMAP PRINT");
-
-        System.out.println(allTermSentenceMatrices);
         return allTermSentenceMatrices;
     }
 
@@ -199,12 +196,13 @@ public class Proj4 {
         System.out.println("max net "+ maxNet);
         System.out.println("max index " + maxIndex);
 
-        Iterator vals= o.keySet().iterator();
+        Iterator vals= o.entrySet().iterator();
         HashMap<String, Double> hashSentence;
         int hashMapCount = 0;
         while(vals.hasNext()) {
+            Map.Entry pair = (Map.Entry) vals.next();
             if(maxIndex == 0 || (maxIndex > 0 && maxIndex == hashMapCount) ) {
-                hashSentence = (HashMap<String, Double>) vals.next();
+                hashSentence = (HashMap<String, Double>) pair.getKey();
                 Iterator abc = hashSentence.values().iterator();
                 int abcCount = 0;
                 ArrayList<Double> changeWeights= new ArrayList<>();
