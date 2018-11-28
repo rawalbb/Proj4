@@ -16,6 +16,15 @@ public class Proj4 {
         ArrayList<Double> allNets = normalizeWeights(weightedVectors);
         reWeights(weightedVectors, allNets);
         //wta_clustering(vector, 10);
+        int count = 0;
+        while (count!=1){
+            HashMap<HashMap<String, Double>, ArrayList<Double>> a = reWeights(weightedVectors, allNets);
+            allNets = normalizeWeights(a);
+            for (double c  :allNets
+                 ) { System.out.println(c);
+
+            }            count++;
+        }
     }
 
     public static ArrayList<String[]> readSentences() throws IOException {
@@ -150,7 +159,7 @@ public class Proj4 {
         for (HashMap<String, Double> entry : set) {
             ArrayList<Double> weights = new ArrayList<>();
             for (int i = 0; i < entry.size(); i++) {
-                weights.add(Math.random() * 10);
+                weights.add(Math.random() * 5);
             }
             objectWeights.put(entry, weights);
         }
@@ -215,17 +224,100 @@ public class Proj4 {
                 {
 //                    System.out.println("\n\n"+o.get(hashSentence));
                     double x = o.get(hashSentence).get(abcCount);
-                    double delta =  x + (double) abc.next()*.03;
+                    System.out.println("WHAT IS THIS:   " + o.get(hashSentence).get(abcCount));
+                    double delta =  x + (double) abc.next()*.000003;
                     //System.out.println("COUNT " + abcCount);
                     //System.out.println("Weights Before " + o.get(hashSentence).get(abcCount) + "    Const " + ((double)abc.next()*.03));
-                    changeWeights.add(delta);
+                    changeWeights.add(delta + o.get(hashSentence).get(abcCount));
                     ++abcCount;
                 }
                 o.put(hashSentence, changeWeights);
-                //System.out.println("NEW WEIGHTS" + hashSentence + "\n" + changeWeights);
+                System.out.println("NEW WEIGHTS" + hashSentence + "\n" + changeWeights);
             }
             hashMapCount++;
         }
         return o;
+    }
+
+    private static void euclideanDistance (HashMap<HashMap<String, Double>, ArrayList<Double>> Sentences , ArrayList<Double> allNets) {
+        ArrayList<Thruple> sentencesWithDist = new ArrayList<>();
+        //System.out.println(Sentences);
+        Iterator vals= Sentences.entrySet().iterator();
+        //System.out.println("____________@ Sentence " + vals.next());
+        int hash1count = 0;
+        HashMap<String, Double> hashSentence;
+        System.out.println("wok");
+
+        while(vals.hasNext()) {
+            Map.Entry pair = (Map.Entry) vals.next();
+
+            //System.out.println("____________@ Sentence " + vals.next());
+            HashMap<String, Double> vals1Sentence = (HashMap<String, Double>) pair.getKey();
+            //Iterator val2= Sentences.entrySet().iterator();
+            double totalEuclideanValue = 0;
+            int hash2count = 0;
+            System.out.println(vals1Sentence.size() + ","+allNets.get(hash1count));
+//            while(val2.hasNext()) {
+//                HashMap<String, Double> val2Sentence = (HashMap<String, Double>) val2.next();
+//                double euclideanValue = 0.0;
+//                if (hash1count != hash2count) {
+//                    euclideanValue += Math.pow(allNets.get(hash1count) - hash2count, 2);
+//                }
+//                sentencesWithDist.add(new Thruple(vals1Sentence, val2Sentence, euclideanValue));
+//                totalEuclideanValue += euclideanValue;
+//                hash2count++;
+//               // System.out.println("VAL 2" + val2.next().toString());
+//
+//            }
+ //           totalEuclideanValue = Math.sqrt(totalEuclideanValue);
+            hash1count++;
+        }
+        //return sentencesWithDist;
+    }
+}
+
+ class Thruple<X, Y, Z> {
+    public final X x;
+    public final Y y;
+    public final Z z;
+
+
+     public Thruple(X x, Y y, Z z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
+     }
+
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + "," + z + ")";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof Thruple)){
+            return false;
+        }
+
+        Thruple<X,Y,Z> other_ = (Thruple<X,Y,Z>) other;
+
+        // this may cause NPE if nulls are valid values for x or y. The logic may be improved to handle nulls properly, if needed.
+        return other_.x.equals(this.x) && other_.y.equals(this.y) && other_.z.equals(this.z);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((x == null) ? 0 : x.hashCode());
+        result = prime * result + ((y == null) ? 0 : y.hashCode());
+        result = prime * result + ((z == null) ? 0 : z.hashCode());
+
+        return result;
     }
 }
