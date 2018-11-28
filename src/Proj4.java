@@ -12,7 +12,9 @@ public class Proj4 {
 
         ArrayList<HashMap<String, Double>> vector = generateTermDocumentMatrix(minedSentences);
         ArrayList<HashMap<String, Double>> normalizedVect = normalizeVector(vector);
-        normalizeWeights(generateWeights(normalizedVect));
+        HashMap<HashMap<String, Double>, ArrayList<Double>> weightedVectors = generateWeights(normalizedVect);
+        ArrayList<Double> allNets = normalizeWeights(weightedVectors);
+        reWeights(weightedVectors, allNets);
         //wta_clustering(vector, 10);
     }
 
@@ -158,7 +160,7 @@ public class Proj4 {
         return objectWeights;
     }
 
-    public static double normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
+    public static ArrayList<Double> normalizeWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o) {
         Iterator it = o.entrySet().iterator();
         ArrayList<Double> allNets = new ArrayList<>();
         while (it.hasNext()) {
@@ -190,7 +192,10 @@ public class Proj4 {
             o.put((HashMap<String, Double>)pair.getKey(), normalWeights);
             System.out.println(pair.getKey() + "\n" + normalWeights);
         }
+        return allNets;
+    }
 
+    public static HashMap<HashMap<String, Double>, ArrayList<Double>> reWeights(HashMap<HashMap<String, Double>, ArrayList<Double>> o, ArrayList<Double> allNets) {
         double maxNet = allNets.stream().mapToDouble(d -> d).max().orElseThrow(NoSuchElementException::new);
         double maxIndex = allNets.indexOf(maxNet);
         System.out.println("max net "+ maxNet);
@@ -221,7 +226,6 @@ public class Proj4 {
             }
             hashMapCount++;
         }
-        //hashmap.getindex(maxIndex) = hashmap.get(maxIndex) + .3(hashmap.getindex(maxIndex).getval
-        return maxNet;
+        return o;
     }
 }
